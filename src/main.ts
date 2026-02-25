@@ -1,7 +1,5 @@
 import "dotenv/config";
 
-async function main() {
-  console.log("WIP!");
-}
+async function main() {}
 
 main();
