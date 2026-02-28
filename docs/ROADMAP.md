@@ -311,11 +311,35 @@ Fase 2 — substituir por **Claude API** para linguagem natural real (já previs
 
 | Feature | Descrição |
 |---------|-----------|
+| **Input por linguagem natural (chat)** | Text area no app com a mesma sintaxe do WhatsApp — ver detalhe abaixo |
 | Orçamentos por categoria | Definir teto mensal por categoria; alerta quando ultrapassar |
 | Despesas recorrentes | Marcar expense como recorrente (mensal, semanal) |
 | Export CSV/PDF | Exportar despesas de um período |
 | Upload de comprovante | Foto/PDF do recibo vinculado à expense |
 | Tags livres | Complementar as categorias com tags personalizadas |
+
+### 6.1 Input por linguagem natural (chat)
+
+Uma text area no front com UX similar ao WhatsApp: o usuário digita uma frase livre e a expense é criada sem preencher formulário.
+
+**Exemplos de input:**
+```
+gastei 50 almoço
+35.90 mercado pão e leite
+recebi 200 freela
+```
+
+**Endpoint:**
+```
+POST /api/expenses/parse
+{ "text": "gastei 50 almoço" }
+```
+
+Retorna a expense criada ou um erro descritivo se o input não for reconhecido.
+
+**Reaproveitamento:** usa exatamente o mesmo parser e inferência de categoria já construídos para a integração WhatsApp (Fase 5). A única diferença é o canal de entrada (HTTP em vez de webhook).
+
+**No front:** componente de chat simples com histórico das últimas mensagens da sessão, um campo de texto e envio por Enter — sem precisar de botões ou formulários.
 
 ---
 
@@ -380,6 +404,8 @@ Dado que a dor central é **anotar rápido** e **ver métricas**, o PWA resolve 
     [ ] Integração Claude API (linguagem natural)
 
 [ ] Fase 6 — Extras
+    [ ] POST /expenses/parse (input por linguagem natural)
+    [ ] Componente de chat no front
     [ ] Orçamentos por categoria
     [ ] Despesas recorrentes
     [ ] Export CSV/PDF
