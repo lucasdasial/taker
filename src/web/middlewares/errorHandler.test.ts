@@ -25,7 +25,9 @@ describe("errorHandler", () => {
 	});
 
 	it("should handle ValidationError with 422 and issues array", () => {
-		const result = z.object({ email: z.email() }).safeParse({ email: "invalid" });
+		const result = z
+			.object({ email: z.email() })
+			.safeParse({ email: "invalid" });
 		if (result.success) throw new Error("Expected validation to fail");
 		const err = new ValidationError(result.error);
 
@@ -65,5 +67,4 @@ describe("errorHandler", () => {
 			expect.objectContaining({ error: "Internal server error" }),
 		);
 	});
-
 });

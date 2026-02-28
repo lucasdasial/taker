@@ -21,7 +21,9 @@ describe("ValidationError", () => {
 	});
 
 	it("should map zod issues to field/message pairs", () => {
-		const err = parseAndFail(z.object({ email: z.email() }), { email: "invalid" });
+		const err = parseAndFail(z.object({ email: z.email() }), {
+			email: "invalid",
+		});
 		expect(err.issues).toHaveLength(1);
 		expect(err.issues[0].field).toBe("email");
 		expect(typeof err.issues[0].message).toBe("string");

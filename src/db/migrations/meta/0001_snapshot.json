@@ -1,0 +1,178 @@
+{
+	"id": "a9a736e0-6849-4900-9883-3d561ac4bea9",
+	"prevId": "5d3590e4-61b9-4ec1-8a5d-a3a272ef4999",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.expenses": {
+			"name": "expenses",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"description": {
+					"name": "description",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"category": {
+					"name": "category",
+					"type": "expense_category",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"direction": {
+					"name": "direction",
+					"type": "expense_direction",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'OUT'"
+				},
+				"value": {
+					"name": "value",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"expenses_user_id_users_id_fk": {
+					"name": "expenses_user_id_users_id_fk",
+					"tableFrom": "expenses",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.users": {
+			"name": "users",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"email": {
+					"name": "email",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"password": {
+					"name": "password",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"users_email_unique": {
+					"name": "users_email_unique",
+					"nullsNotDistinct": false,
+					"columns": ["email"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {
+		"public.expense_category": {
+			"name": "expense_category",
+			"schema": "public",
+			"values": [
+				"MERCADO",
+				"RESTAURANTES",
+				"PRODUTOS_LIMPEZA",
+				"SAUDE",
+				"MORADIA",
+				"ASSINATURAS",
+				"TRANSPORTE",
+				"EDUCACAO",
+				"COMPRAS",
+				"DIVIDAS",
+				"LAZER",
+				"BELEZA"
+			]
+		},
+		"public.expense_direction": {
+			"name": "expense_direction",
+			"schema": "public",
+			"values": ["IN", "OUT"]
+		}
+	},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}
