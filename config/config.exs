@@ -11,6 +11,10 @@ config :anotagasto,
   ecto_repos: [Anotagasto.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :anotagasto, Anotagasto.Repo,
+  migration_primary_key: [type: :binary_id],
+  migration_foreign_key: [type: :binary_id]
+
 # Configure the endpoint
 config :anotagasto, AnotagastoWeb.Endpoint,
   url: [host: "localhost"],

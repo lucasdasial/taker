@@ -22,4 +22,10 @@ defmodule AnotagastoWeb.FallbackController do
     |> put_view(html: AnotagastoWeb.ErrorHTML, json: AnotagastoWeb.ErrorJSON)
     |> render(:"404")
   end
+
+  def call(conn, params) do
+    conn
+    |> put_status(:bad_request)
+    |> json(params)
+  end
 end
