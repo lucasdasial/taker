@@ -7,6 +7,8 @@ defmodule AnotagastoWeb.Router do
 
   scope "/api", AnotagastoWeb do
     pipe_through :api
+
+    resources "/users", UserController, except: [:new, :edit]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
