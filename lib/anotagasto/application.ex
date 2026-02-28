@@ -20,6 +20,10 @@ defmodule Anotagasto.Application do
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
+    unless Anotagasto.Auth.Guardian.secret_available?() do
+      raise "APP_SECRET environment variable is missing or empty"
+    end
+
     opts = [strategy: :one_for_one, name: Anotagasto.Supervisor]
     Supervisor.start_link(children, opts)
   end

@@ -7,10 +7,10 @@ defmodule AnotagastoWeb.AuthController do
 
   def login(conn, params) do
     with {:ok, login} <- Login.valid?(params),
-         {:ok, user} <- Auth.login(login) do
+         {:ok, token} <- Auth.login(login) do
       conn
       |> put_status(:ok)
-      |> json(%{user_id: user.id})
+      |> json(%{token: token})
     end
   end
 end

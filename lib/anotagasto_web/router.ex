@@ -1,16 +1,27 @@
 defmodule AnotagastoWeb.Router do
   use AnotagastoWeb, :router
 
+  alias AnotagastoWeb.Plugs
+
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :auth do
+    plug Plugs.AuthPipeline
   end
 
   scope "/api", AnotagastoWeb do
     pipe_through :api
 
-    resources "/users", UserController, except: [:new, :edit]
-
+    post "/register", UserController, :create
     post "/auth", AuthController, :login
+  end
+
+  scope "/api", AnotagastoWeb do
+    pipe_through [:api, :auth]
+
+    resources "/users", UserController, except: [:new, :edit]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
