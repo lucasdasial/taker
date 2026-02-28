@@ -6,23 +6,23 @@ import { timeout } from "./middlewares/timeout.ts";
 import { registerApiRouter } from "./routes.ts";
 
 export function createServer() {
-    const app = express();
+	const app = express();
 
-    app.use(express.json());
-    app.use(loggerMiddleware);
-    app.use(timeout);
+	app.use(express.json());
+	app.use(loggerMiddleware);
+	app.use(timeout);
 
-    app.use("/api", registerApiRouter())
+	app.use("/api", registerApiRouter());
 
-    app.use(errorHandler);
+	app.use(errorHandler);
 
-    return app;
+	return app;
 }
 
 export function startServer() {
-    const app = createServer();
+	const app = createServer();
 
-    app.listen(envs.port, () => {
-        logger.info(`Running on http://localhost:${envs.port}`);
-    });
+	app.listen(envs.port, () => {
+		logger.info(`Running on http://localhost:${envs.port}`);
+	});
 }
