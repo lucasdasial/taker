@@ -49,5 +49,7 @@ defmodule AnotagastoWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+  # Em produção, substitua "*" pelo seu domínio real
+  plug CORSPlug, origin: "*"
   plug AnotagastoWeb.Router
 end
