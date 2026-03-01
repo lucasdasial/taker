@@ -23,6 +23,8 @@ defmodule AnotagastoWeb.Router do
 
     resources "/users", UserController, except: [:new, :edit]
     resources "/expenses", ExpenseController, except: [:new, :edit]
+
+    get "/analytics/summary", AnalyticsController, :summary
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
