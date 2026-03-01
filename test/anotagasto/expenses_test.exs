@@ -10,9 +10,12 @@ defmodule Anotagasto.ExpensesTest do
 
     @invalid_attrs %{value: nil, description: nil, category: nil, user_id: nil}
 
-    test "list_expenses/0 returns all expenses" do
+    test "list_expenses_by_user/3 returns expenses for user" do
       expense = expense_fixture()
-      assert Expenses.list_expenses() == [expense]
+      {:ok, pagination} = Anotagasto.Pagination.build(%{})
+      {:ok, filters} = Anotagasto.Expenses.Filters.build(%{})
+      result = Expenses.list_expenses_by_user(expense.user_id, pagination, filters)
+      assert result.data == [expense]
     end
 
     test "get_expense!/1 returns the expense with given id" do

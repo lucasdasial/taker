@@ -27,6 +27,55 @@ defmodule AnotagastoWeb.ExpenseControllerTest do
       conn = get(conn, ~p"/api/expenses")
       assert json_response(conn, 200)["data"] == []
     end
+
+    test "filters by category", %{conn: conn} do
+      expense_fixture(%{category: :food, description: "almoço"})
+      expense_fixture(%{category: :transport, description: "uber"})
+
+      conn = get(conn, ~p"/api/expenses?category=food")
+      data = json_response(conn, 200)["data"]
+
+      assert length(data) == 1
+      assert hd(data)["category"] == "food"
+    end
+
+    test "returns 422 for invalid category", %{conn: conn} do
+      conn = get(conn, ~p"/api/expenses?category=invalid_category")
+      assert json_response(conn, 422)["errors"] != %{}
+    end
+
+    test "filters by search term", %{conn: conn} do
+      expense_fixture(%{description: "mercado extra"})
+      expense_fixture(%{description: "uber viagem"})
+
+      conn = get(conn, ~p"/api/expenses?search=mercado")
+      data = json_response(conn, 200)["data"]
+
+      assert length(data) == 1
+      assert hd(data)["description"] == "mercado extra"
+    end
+
+    test "filters by month", %{conn: conn} do
+      expense_fixture()
+      current_month = DateTime.utc_now() |> Calendar.strftime("%Y-%m")
+
+      conn = get(conn, ~p"/api/expenses?month=#{current_month}")
+      assert length(json_response(conn, 200)["data"]) == 1
+
+      conn = get(conn, ~p"/api/expenses?month=2000-01")
+      assert json_response(conn, 200)["data"] == []
+    end
+
+    test "returns 422 for invalid month format", %{conn: conn} do
+      conn = get(conn, ~p"/api/expenses?month=invalid")
+      assert json_response(conn, 422)["errors"] != %{}
+    end
+
+    test "ignores empty search param", %{conn: conn} do
+      expense_fixture()
+      conn = get(conn, ~p"/api/expenses?search=")
+      assert length(json_response(conn, 200)["data"]) == 1
+    end
   end
 
   describe "create expense" do

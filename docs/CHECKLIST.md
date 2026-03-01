@@ -29,7 +29,7 @@
 
 - [x] `GET /api/expenses/:id` — detalhe de uma despesa
 - [x] Índices no banco (`user_id`, `user_id + inserted_at`, `user_id + category`)
-- [ ] Filtros na listagem (`month`, `search`, `category`)
+- [x] Filtros na listagem (`month`, `search`, `category`)
 - [x] Paginação na listagem (`page`, `limit`)
 - [ ] `GET /api/dashboard/summary?month=YYYY-MM`
 

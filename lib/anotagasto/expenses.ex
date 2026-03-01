@@ -8,9 +8,10 @@ defmodule Anotagasto.Expenses do
   alias Anotagasto.Repo
 
   alias Anotagasto.Expenses.Expense
+  alias Anotagasto.Expenses.Filters
 
-  def list_expenses_by_user(user_id, %Anotagasto.Pagination{} = pagination) do
-    Expenses.Repo.list_expenses_by_user(user_id, pagination)
+  def list_expenses_by_user(user_id, %Anotagasto.Pagination{} = pagination, %Filters{} = filters \\ %Filters{}) do
+    Expenses.Repo.list_expenses_by_user(user_id, pagination, filters)
   end
 
   def get_expense!(id), do: Repo.get!(Expense, id)
