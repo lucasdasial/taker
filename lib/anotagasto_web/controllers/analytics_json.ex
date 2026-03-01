@@ -1,4 +1,16 @@
 defmodule AnotagastoWeb.AnalyticsJSON do
+  def daily(%{month: month, days: days}) do
+    %{
+      data: %{
+        month: month,
+        days:
+          Enum.map(days, fn entry ->
+            %{date: entry.date, total: entry.total, count: entry.count}
+          end)
+      }
+    }
+  end
+
   def summary(%{month: month, total: total, count: count, by_category: by_category}) do
     %{
       data: %{

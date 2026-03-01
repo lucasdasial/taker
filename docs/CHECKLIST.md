@@ -37,11 +37,11 @@
 
 ## Fase 2 — Analytics
 
-- [ ] `GET /api/dashboard/by-category?month=YYYY-MM`
-- [ ] `GET /api/dashboard/daily?month=YYYY-MM`
-- [ ] `GET /api/reports/monthly` — histórico dos últimos 12 meses
-- [ ] `GET /api/reports/compare?month1=...&month2=...`
-- [ ] `GET /api/reports/category-evolution?months=6`
+- [x] `GET /api/analytics/by-category?month=YYYY-MM` — coberto pelo `GET /api/analytics/summary`
+- [x] `GET /api/analytics/daily?month=YYYY-MM`
+- [ ] `GET /api/analytics/monthly` — histórico dos últimos 12 meses
+- [ ] `GET /api/analytics/compare?month1=...&month2=...`
+- [ ] `GET /api/analytics/category-evolution?months=6`
 
 ---
 

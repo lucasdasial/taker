@@ -5,6 +5,14 @@ defmodule AnotagastoWeb.AnalyticsController do
 
   action_fallback AnotagastoWeb.FallbackController
 
+  def daily(conn, params) do
+    user = conn.assigns.user
+
+    with {:ok, daily} <- Analytics.daily(user.id, params) do
+      render(conn, :daily, daily)
+    end
+  end
+
   def summary(conn, params) do
     user = conn.assigns.user
 

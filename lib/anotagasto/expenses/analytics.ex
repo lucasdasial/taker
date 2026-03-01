@@ -5,6 +5,27 @@ defmodule Anotagasto.Expenses.Analytics do
   alias Anotagasto.Expenses.Expense
   alias Anotagasto.Repo
 
+  def daily(user_id, params) do
+    with {:ok, %Params{} = p} <- Params.build(params) do
+      {start_dt, end_dt} = Params.date_range(p)
+
+      days =
+        from(e in Expense,
+          where:
+            e.user_id == ^user_id and
+              e.inserted_at >= ^start_dt and
+              e.inserted_at < ^end_dt,
+          group_by: fragment("?::date", e.inserted_at),
+          select: {fragment("?::date", e.inserted_at), sum(e.value), count(e.id)},
+          order_by: fragment("?::date", e.inserted_at)
+        )
+        |> Repo.all()
+        |> Enum.map(fn {date, total, count} -> %{date: date, total: total, count: count} end)
+
+      {:ok, %{month: p.month, days: days}}
+    end
+  end
+
   def summary(user_id, params) do
     with {:ok, %Params{} = p} <- Params.build(params) do
       {start_dt, end_dt} = Params.date_range(p)

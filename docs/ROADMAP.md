@@ -108,29 +108,31 @@ Sem paginação, a listagem vai crescer indefinidamente e travar o front.
 
 ---
 
-### 1.3 Endpoint de resumo financeiro
+### 1.3 Endpoint de resumo financeiro ✅
 
 ```
-GET /api/dashboard/summary?month=2026-02
+GET /api/analytics/summary?month=2026-02
 ```
 
-Resposta esperada:
+O parâmetro `month` é opcional — sem ele, usa o mês atual.
+
+Resposta:
 
 ```json
 {
-  "month": "2026-02",
-  "totalOut": "1250.00",
-  "totalIn": "300.00",
-  "balance": "-950.00",
-  "previousMonth": {
-    "totalOut": "1150.00",
-    "variation": "+8.69%"
-  },
-  "expenseCount": 23
+  "data": {
+    "month": "2026-02",
+    "total": "1250.00",
+    "count": 23,
+    "by_category": [
+      { "category": "food",      "total": "450.00", "count": 8 },
+      { "category": "transport", "total": "200.00", "count": 5 }
+    ]
+  }
 }
 ```
 
-É o card principal da tela home — total do mês e variação vs mês anterior.
+`by_category` vem ordenado por `total` decrescente e inclui apenas categorias com ao menos uma despesa no mês. Como são no máximo 13 categorias, o payload nunca fica grande — serve direto para gráfico de pizza/donut e ranking de gastos no front.
 
 ---
 
@@ -156,51 +158,46 @@ users (phone_number)  ← já existe via unique_index
 
 > Transforma o app de "lista de gastos" em "ferramenta de controle financeiro".
 
-### 2.1 Gastos por categoria
+### 2.1 Gastos por categoria ✅
 
-```
-GET /api/dashboard/by-category?month=2026-02
-```
-
-```json
-[
-  { "category": "food", "total": "450.00", "percentage": 36 },
-  { "category": "housing", "total": "300.00", "percentage": 24 }
-]
-```
-
-Alimenta o gráfico de pizza na tela home.
+Coberto pelo `GET /api/analytics/summary` — o campo `by_category` já entrega o agrupamento por categoria ordenado por total. Não há endpoint separado.
 
 ---
 
-### 2.2 Evolução diária
+### 2.2 Evolução diária ✅
 
 ```
-GET /api/dashboard/daily?month=2026-02
+GET /api/analytics/daily?month=2026-02
 ```
+
+O parâmetro `month` é opcional — sem ele, usa o mês atual. Retorna apenas os dias com ao menos uma despesa.
 
 ```json
-[
-  { "date": "2026-02-01", "total": "85.00" },
-  { "date": "2026-02-02", "total": "0.00" },
-  { "date": "2026-02-03", "total": "230.00" }
-]
+{
+  "data": {
+    "month": "2026-02",
+    "days": [
+      { "date": "2026-02-01", "total": "85.00",  "count": 2 },
+      { "date": "2026-02-03", "total": "230.00", "count": 1 }
+    ]
+  }
+}
 ```
 
-Alimenta o gráfico de linha na tela home.
+`count` indica quantas despesas foram lançadas naquele dia. O endpoint retorna só agregação — para ver as despesas de um dia específico, use `GET /api/expenses` com filtro de data. Alimenta o gráfico de linha na tela home.
 
 ---
 
 ### 2.3 Histórico mensal (últimos 12 meses)
 
 ```
-GET /api/reports/monthly
+GET /api/analytics/monthly
 ```
 
 ```json
 [
-  { "month": "2026-02", "totalOut": "1250.00", "totalIn": "300.00" },
-  { "month": "2026-01", "totalOut": "1150.00", "totalIn": "0.00" }
+  { "month": "2026-02", "total": "1250.00", "count": 23 },
+  { "month": "2026-01", "total": "1150.00", "count": 18 }
 ]
 ```
 
@@ -211,13 +208,13 @@ Tela de relatórios — evolução ao longo do ano.
 ### 2.4 Comparação entre meses
 
 ```
-GET /api/reports/compare?month1=2026-02&month2=2026-01
+GET /api/analytics/compare?month1=2026-02&month2=2026-01
 ```
 
 ```json
 {
-  "month1": { "month": "2026-02", "totalOut": "1250.00", "byCategory": [...] },
-  "month2": { "month": "2026-01", "totalOut": "1150.00", "byCategory": [...] },
+  "month1": { "month": "2026-02", "total": "1250.00", "by_category": [...] },
+  "month2": { "month": "2026-01", "total": "1150.00", "by_category": [...] },
   "variation": "+8.69%"
 }
 ```
@@ -227,7 +224,7 @@ GET /api/reports/compare?month1=2026-02&month2=2026-01
 ### 2.5 Evolução por categoria
 
 ```
-GET /api/reports/category-evolution?months=6
+GET /api/analytics/category-evolution?months=6
 ```
 
 ```json
@@ -512,18 +509,18 @@ Os endpoints de analytics (Fase 2) também devem respeitar o household como esco
     [x] CRUD de despesas
     [ ] CORS e timeout
 
-[ ] Fase 1 — MVP funcional
+[x] Fase 1 — MVP funcional
     [x] GET /expenses/:id
     [x] Índices no banco
-    [ ] GET /expenses com filtros e paginação
-    [ ] GET /dashboard/summary
+    [x] GET /expenses com filtros e paginação
+    [x] GET /analytics/summary
 
 [ ] Fase 2 — Analytics
-    [ ] GET /dashboard/by-category
-    [ ] GET /dashboard/daily
-    [ ] GET /reports/monthly
-    [ ] GET /reports/compare
-    [ ] GET /reports/category-evolution
+    [x] GET /analytics/by-category (coberto pelo summary)
+    [x] GET /analytics/daily
+    [ ] GET /analytics/monthly
+    [ ] GET /analytics/compare
+    [ ] GET /analytics/category-evolution
 
 [ ] Fase 3 — Segurança e perfil
     [ ] Rate limiting
