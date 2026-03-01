@@ -13,6 +13,16 @@ No front, o `summary` alimenta a tela home inteira com uma única requisição:
 - **Ranking de gastos** — `by_category` já vem ordenado por `total` decrescente, pronto para renderizar uma lista "onde você mais gastou"
 - **Card de destaque** — "você gastou mais em Supermercado esse mês" usando o primeiro item de `by_category`
 
+```mermaid
+pie title Distribuição de gastos — março/2026
+    "Supermercado" : 450
+    "Moradia" : 300
+    "Transporte apps" : 200
+    "Saúde" : 150
+    "Lazer" : 100
+    "Outros" : 50
+```
+
 ---
 
 ### Por que `daily` retorna só agregação e não a lista de despesas
@@ -23,6 +33,15 @@ O `daily` serve exclusivamente para visualizações de tendência:
 
 - **Gráfico de linha ou barras** — evolução do gasto dia a dia ao longo do mês
 - **Heatmap de gastos** — intensidade de gasto por dia (estilo GitHub contributions)
+
+```mermaid
+xychart-beta
+    title "Gastos diários — março/2026"
+    x-axis [1, 5, 10, 15, 20, 25, 31]
+    y-axis "R$" 0 --> 300
+    bar  [85, 0, 230, 60, 190, 45, 120]
+    line [85, 0, 230, 60, 190, 45, 120]
+```
 
 Para ver as despesas de um dia específico (ex: usuário toca em uma barra do gráfico), o front faz uma segunda chamada para `GET /api/expenses` com filtro de data — endpoint a implementar. Assim cada endpoint tem uma responsabilidade clara e o `daily` permanece leve.
 
