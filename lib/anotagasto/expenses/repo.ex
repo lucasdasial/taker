@@ -7,9 +7,15 @@ defmodule Anotagasto.Expenses.Repo do
   alias Anotagasto.Repo
 
   def list_expenses_by_user(user_id, %Pagination{} = pagination, %Filters{} = filters) do
-    from(e in Expense, where: e.user_id == ^user_id, order_by: [desc: e.inserted_at])
-    |> apply_filters(filters)
+    base_query =
+      from(e in Expense, where: e.user_id == ^user_id, order_by: [desc: e.inserted_at])
+      |> apply_filters(filters)
+
+    amount_total = Repo.aggregate(base_query, :sum, :value) || Decimal.new(0)
+
+    base_query
     |> Repo.paginate(pagination)
+    |> Map.put(:amount_total, amount_total)
   end
 
   defp apply_filters(query, %Filters{category: category, search: search, month: month}) do

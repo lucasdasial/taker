@@ -4,10 +4,11 @@ defmodule AnotagastoWeb.ExpenseJSON do
   @doc """
   Renders a list of expenses.
   """
-  def index(%{entries: entries, page: page, page_size: page_size, total: total, total_pages: total_pages}) do
+  def index(%{entries: entries, page: page, page_size: page_size, total: total, total_pages: total_pages, amount_total: amount_total}) do
     %{
       data: for(expense <- entries, do: data(expense)),
-      pagination: %{page: page, page_size: page_size, total: total, total_pages: total_pages}
+      pagination: %{page: page, page_size: page_size, total: total, total_pages: total_pages},
+      amount_total: amount_total
     }
   end
 

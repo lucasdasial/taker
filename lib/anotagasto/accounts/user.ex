@@ -14,16 +14,19 @@ defmodule Anotagasto.Accounts.User do
     timestamps(type: :utc_datetime)
   end
 
-  # TODO: sanitizar o telefone e nome
-
   def changeset(attrs), do: changeset(%__MODULE__{}, attrs)
   @doc false
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:name, :password, :phone_number])
     |> validate_required([:name, :password, :phone_number])
+    |> sanitize_phone_number()
     |> unique_constraint(:phone_number)
     |> hash_password()
+  end
+
+  defp sanitize_phone_number(changeset) do
+    update_change(changeset, :phone_number, &Regex.replace(~r/[^\d]/, &1, ""))
   end
 
   defp hash_password(%Ecto.Changeset{} = changeset) do
