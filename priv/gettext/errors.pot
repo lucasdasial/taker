@@ -92,6 +92,16 @@ msgid_plural "should be at most %{count} byte(s)"
 msgstr[0] ""
 msgstr[1] ""
 
+## Custom application errors
+msgid "Invalid credentials"
+msgstr ""
+
+msgid "User not found"
+msgstr ""
+
+msgid "Unauthorized"
+msgstr ""
+
 ## From Ecto.Changeset.validate_number/3
 msgid "must be less than %{number}"
 msgstr ""

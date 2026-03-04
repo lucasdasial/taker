@@ -43,6 +43,8 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :anotagasto, AnotagastoWeb.Gettext, default_locale: "pt_BR"
+
 config :anotagasto, Anotagasto.Auth.Guardian,
   issuer: "anotagasto",
   ttl: {1, :day}

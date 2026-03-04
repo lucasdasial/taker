@@ -6,6 +6,7 @@ defmodule AnotagastoWeb.FallbackController do
   """
   require Logger
   use AnotagastoWeb, :controller
+  use Gettext, backend: AnotagastoWeb.Gettext
 
   # This clause handles errors returned by Ecto's insert/update/delete.
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
@@ -26,7 +27,13 @@ defmodule AnotagastoWeb.FallbackController do
   def call(conn, {:error, :user_not_found}) do
     conn
     |> put_status(:not_found)
-    |> json(%{error: "User not exist!"})
+    |> json(%{error: dgettext("errors", "User not found")})
+  end
+
+  def call(conn, {:error, :invalid_credentials}) do
+    conn
+    |> put_status(:unauthorized)
+    |> json(%{error: dgettext("errors", "Invalid credentials")})
   end
 
   def call(conn, params) do
