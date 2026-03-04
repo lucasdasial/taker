@@ -7,6 +7,10 @@ defmodule AnotagastoWeb.UserController do
 
   action_fallback AnotagastoWeb.FallbackController
 
+  def me(conn, _params) do
+    render(conn, :show, user: conn.assigns.user)
+  end
+
   def index(conn, params) do
     with {:ok, pagination} <- Pagination.build(params) do
       users = Accounts.list_users(pagination)

@@ -18,13 +18,15 @@ defmodule Anotagasto.Expenses.Expense do
     :leisure,
     :beauty,
     :clothing,
+    :delivery,
+    :vehicle,
     :uncategorized
   ]
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "expenses" do
-    field :value, :decimal
+    field :value, :integer
     field :description, :string
     field :category, Ecto.Enum, values: @category_enum
 

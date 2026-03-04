@@ -4,7 +4,7 @@ defmodule Anotagasto.Repo.Migrations.CreateExpenses do
   def change do
     create table(:expenses, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :value, :decimal, precision: 10, scale: 2, null: false
+      add :value, :integer, null: false
       add :description, :string, null: false
       add :category, :string, null: false
 

@@ -21,6 +21,7 @@ defmodule AnotagastoWeb.Router do
   scope "/api", AnotagastoWeb do
     pipe_through [:api, :auth]
 
+    get "/users/me", UserController, :me
     resources "/users", UserController, except: [:new, :edit]
     resources "/expenses", ExpenseController, except: [:new, :edit]
 
