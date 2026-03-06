@@ -8,7 +8,7 @@ defmodule AnotagastoWeb.ExpenseJSON do
     %{
       data: for(expense <- entries, do: data(expense)),
       pagination: %{page: page, page_size: page_size, total: total, total_pages: total_pages},
-      amount_total: amount_total
+      amount_total: to_int(amount_total)
     }
   end
 
@@ -18,6 +18,10 @@ defmodule AnotagastoWeb.ExpenseJSON do
   def show(%{expense: expense}) do
     %{data: data(expense)}
   end
+
+  defp to_int(nil), do: 0
+  defp to_int(%Decimal{} = d), do: Decimal.to_integer(d)
+  defp to_int(n) when is_integer(n), do: n
 
   defp data(%Expense{} = expense) do
     %{
