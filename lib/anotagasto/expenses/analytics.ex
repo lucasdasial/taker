@@ -7,17 +7,17 @@ defmodule Anotagasto.Expenses.Analytics do
 
   def daily(user_id, params) do
     with {:ok, %Params{} = p} <- Params.build(params) do
-      {start_dt, end_dt} = Params.date_range(p)
+      {start_date, end_date} = date_range(p)
 
       days =
         from(e in Expense,
           where:
             e.user_id == ^user_id and
-              e.inserted_at >= ^start_dt and
-              e.inserted_at < ^end_dt,
-          group_by: fragment("?::date", e.inserted_at),
-          select: {fragment("?::date", e.inserted_at), sum(e.value), count(e.id)},
-          order_by: fragment("?::date", e.inserted_at)
+              e.date >= ^start_date and
+              e.date < ^end_date,
+          group_by: e.date,
+          select: {e.date, sum(e.value), count(e.id)},
+          order_by: e.date
         )
         |> Repo.all()
         |> Enum.map(fn {date, total, count} -> %{date: date, total: total, count: count} end)
@@ -28,14 +28,14 @@ defmodule Anotagasto.Expenses.Analytics do
 
   def summary(user_id, params) do
     with {:ok, %Params{} = p} <- Params.build(params) do
-      {start_dt, end_dt} = Params.date_range(p)
+      {start_date, end_date} = date_range(p)
 
       rows =
         from(e in Expense,
           where:
             e.user_id == ^user_id and
-              e.inserted_at >= ^start_dt and
-              e.inserted_at < ^end_dt,
+              e.date >= ^start_date and
+              e.date < ^end_date,
           group_by: e.category,
           select: {e.category, sum(e.value), count(e.id)},
           order_by: [desc: sum(e.value)]
@@ -52,5 +52,14 @@ defmodule Anotagasto.Expenses.Analytics do
 
       {:ok, %{month: p.month, total: total, count: count, by_category: by_category}}
     end
+  end
+
+  defp date_range(%Params{month: month_str}) do
+    [year_str, month_num_str] = String.split(month_str, "-")
+    {year, _} = Integer.parse(year_str)
+    {month, _} = Integer.parse(month_num_str)
+    {next_year, next_month} = if month == 12, do: {year + 1, 1}, else: {year, month + 1}
+
+    {Date.new!(year, month, 1), Date.new!(next_year, next_month, 1)}
   end
 end

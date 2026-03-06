@@ -8,7 +8,7 @@ defmodule Anotagasto.Expenses.Repo do
 
   def list_expenses_by_user(user_id, %Pagination{} = pagination, %Filters{} = filters) do
     base_query =
-      from(e in Expense, where: e.user_id == ^user_id, order_by: [desc: e.inserted_at])
+      from(e in Expense, where: e.user_id == ^user_id, order_by: [desc: e.date, desc: e.inserted_at])
       |> apply_filters(filters)
 
     amount_total = Repo.aggregate(base_query, :sum, :value) || Decimal.new(0)
@@ -44,12 +44,10 @@ defmodule Anotagasto.Expenses.Repo do
     [year_str, month_str] = String.split(month_str, "-")
     {year, _} = Integer.parse(year_str)
     {month, _} = Integer.parse(month_str)
-
-    start_dt = DateTime.new!(Date.new!(year, month, 1), ~T[00:00:00], "Etc/UTC")
-
     {next_year, next_month} = if month == 12, do: {year + 1, 1}, else: {year, month + 1}
-    end_dt = DateTime.new!(Date.new!(next_year, next_month, 1), ~T[00:00:00], "Etc/UTC")
 
-    from(e in query, where: e.inserted_at >= ^start_dt and e.inserted_at < ^end_dt)
+    from(e in query,
+      where: e.date >= ^Date.new!(year, month, 1) and e.date < ^Date.new!(next_year, next_month, 1)
+    )
   end
 end

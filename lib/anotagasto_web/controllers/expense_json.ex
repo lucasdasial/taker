@@ -26,7 +26,7 @@ defmodule AnotagastoWeb.ExpenseJSON do
       description: expense.description,
       category: expense.category,
       user_id: expense.user_id,
-      inserted_at: expense.inserted_at
+      date: expense.date
     }
   end
 end

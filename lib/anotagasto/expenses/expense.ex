@@ -29,6 +29,7 @@ defmodule Anotagasto.Expenses.Expense do
     field :value, :integer
     field :description, :string
     field :category, Ecto.Enum, values: @category_enum
+    field :date, :date
 
     belongs_to :user, Anotagasto.Accounts.User
 
@@ -39,8 +40,17 @@ defmodule Anotagasto.Expenses.Expense do
   @doc false
   def changeset(expense, attrs) do
     expense
-    |> cast(attrs, [:value, :description, :category, :user_id])
+    |> cast(attrs, [:value, :description, :category, :date, :user_id])
     |> validate_required([:value, :description, :category, :user_id])
+    |> put_date_default()
+  end
+
+  defp put_date_default(changeset) do
+    if get_field(changeset, :date) do
+      changeset
+    else
+      put_change(changeset, :date, Date.utc_today())
+    end
   end
 
   def valid?(attrs) do
