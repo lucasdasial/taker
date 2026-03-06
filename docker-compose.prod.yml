@@ -1,0 +1,7 @@
+services:
+  api:
+    image: anotagasto-api:latest
+    container_name: anotagasto-api
+    network_mode: host
+    env_file: /root/anotagasto.env
+    restart: unless-stopped
